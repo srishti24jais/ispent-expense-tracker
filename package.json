@@ -1,6 +1,7 @@
 {
-  "name": "react-expense-tracker",
-  "version": "0.1.0",
+  "name": "ispent-expense-tracker",
+  "version": "1.0.0",
+  "description": "Full-stack expense tracking application with Next.js, React, Redux, and SQLite",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,5 +25,20 @@
     "eslint-config-next": "14.0.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "redux",
+    "sqlite",
+    "expense-tracker",
+    "fullstack",
+    "tailwindcss"
+  ],
+  "author": "Srishti Jaiswal",
+  "license": "MIT"
 }
