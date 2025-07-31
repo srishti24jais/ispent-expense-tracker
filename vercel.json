@@ -1,24 +1,4 @@
 {
   "version": 2,
-  "name": "ispent-expense-tracker",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "app/api/**/*.js": {
-      "maxDuration": 10
-    }
-  }
+  "name": "ispent-expense-tracker"
 } 
