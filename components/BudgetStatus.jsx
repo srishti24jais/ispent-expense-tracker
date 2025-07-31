@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useExpenses } from "../lib/hooks/useApi";
 
@@ -9,20 +9,40 @@ export function BudgetStatus() {
   const { expenses: expenseList, fetchExpenses, loading } = useExpenses();
   const [autoRefreshIndicator, setAutoRefreshIndicator] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const prevExpensesLength = useRef(0);
+  const isInitialMount = useRef(true);
   
   // Fetch expenses when component mounts to ensure we have the latest data
   useEffect(() => {
     fetchExpenses();
   }, [fetchExpenses]);
 
-  // Update timestamp and show indicator when expenses change
+  // Update timestamp and show indicator when expenses are actually added/removed
   useEffect(() => {
-    setLastUpdated(new Date());
-    // Show auto-refresh indicator briefly
-    setAutoRefreshIndicator(true);
-    const timer = setTimeout(() => setAutoRefreshIndicator(false), 2000);
-    return () => clearTimeout(timer);
-  }, [expenseList]);
+    const currentLength = expenseList.length;
+    
+    // Skip the initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      prevExpensesLength.current = currentLength;
+      setLastUpdated(new Date());
+      return;
+    }
+    
+    // Check if expenses count has changed
+    if (currentLength !== prevExpensesLength.current) {
+      console.log('BudgetStatus - Expenses changed from', prevExpensesLength.current, 'to', currentLength);
+      setLastUpdated(new Date());
+      setAutoRefreshIndicator(true);
+      
+      const timer = setTimeout(() => {
+        setAutoRefreshIndicator(false);
+      }, 3000);
+      
+      prevExpensesLength.current = currentLength;
+      return () => clearTimeout(timer);
+    }
+  }, [expenseList.length]);
   
   // Helper function to safely parse price
   const safeParsePrice = (price) => {

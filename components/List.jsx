@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ListItem } from "./ListItem";
 import { useExpenses } from "../lib/hooks/useApi";
 
@@ -8,22 +8,40 @@ export function List() {
   const { expenses, fetchExpenses, deleteExpense, loading } = useExpenses();
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [autoRefreshIndicator, setAutoRefreshIndicator] = useState(false);
+  const prevExpensesLength = useRef(0);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     console.log('List component - useEffect triggered, fetching expenses');
     fetchExpenses();
   }, [fetchExpenses]); // Include fetchExpenses in dependency array since it's memoized
 
-  // Update timestamp when expenses change
+  // Update timestamp and show indicator when expenses are actually added/removed
   useEffect(() => {
-    if (expenses.length > 0) {
+    const currentLength = expenses.length;
+    
+    // Skip the initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      prevExpensesLength.current = currentLength;
       setLastUpdated(new Date());
-      // Show auto-refresh indicator briefly
+      return;
+    }
+    
+    // Check if expenses count has changed
+    if (currentLength !== prevExpensesLength.current) {
+      console.log('List component - Expenses changed from', prevExpensesLength.current, 'to', currentLength);
+      setLastUpdated(new Date());
       setAutoRefreshIndicator(true);
-      const timer = setTimeout(() => setAutoRefreshIndicator(false), 2000);
+      
+      const timer = setTimeout(() => {
+        setAutoRefreshIndicator(false);
+      }, 3000);
+      
+      prevExpensesLength.current = currentLength;
       return () => clearTimeout(timer);
     }
-  }, [expenses]);
+  }, [expenses.length]);
 
   const handleDelete = async (id) => {
     try {
