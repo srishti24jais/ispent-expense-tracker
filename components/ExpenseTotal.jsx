@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
-import { useExpenses } from "../lib/hooks/useApi";
+import { useExpenses } from "../lib/context/ExpensesContext";
 import { CATEGORY_LABELS } from "../lib/constants/categories";
 
 export function ExpenseTotal(props) {

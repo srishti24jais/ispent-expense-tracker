@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { ListItem } from "./ListItem";
-import { useExpenses } from "../lib/hooks/useApi";
+import { useExpenses } from "../lib/context/ExpensesContext";
 
 export function List() {
   const { expenses, fetchExpenses, deleteExpense, loading } = useExpenses();

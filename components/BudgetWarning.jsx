@@ -1,7 +1,7 @@
 'use client'
 
 import { useSelector } from "react-redux";
-import { useExpenses } from "../lib/hooks/useApi";
+import { useExpenses } from "../lib/context/ExpensesContext";
 
 export function BudgetWarning() {
   const budget = useSelector((store) => store.EXPENSE.budget);

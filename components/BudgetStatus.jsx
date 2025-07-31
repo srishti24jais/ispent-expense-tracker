@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
-import { useExpenses } from "../lib/hooks/useApi";
+import { useExpenses } from "../lib/context/ExpensesContext";
 
 export function BudgetStatus() {
   const budget = useSelector((store) => store.EXPENSE.budget);

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { EXPENSE_CATEGORIES } from "../lib/constants/categories";
-import { useExpenses } from "../lib/hooks/useApi";
+import { useExpenses } from "../lib/context/ExpensesContext";
 
 export function ExpenseInput(props) {
   const { addExpense, loading, error } = useExpenses();
