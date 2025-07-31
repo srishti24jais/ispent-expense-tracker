@@ -10,10 +10,12 @@ export function ExpenseInput(props) {
   const [expenseName, setExpenseName] = useState('');
   const [category, setCategory] = useState('food');
   const [submitError, setSubmitError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   async function submit(e) {
     e.preventDefault();
     setSubmitError('');
+    setSuccessMessage('');
     
     console.log('ExpenseInput - Form submitted with:', { expenseName, price, category });
     
@@ -42,11 +44,17 @@ export function ExpenseInput(props) {
       const result = await addExpense(expenseData);
       console.log('ExpenseInput - Expense added successfully:', result);
       
+      // Show success message
+      setSuccessMessage('Expense added successfully! Budget status is updating...');
+      
       // Reset form
       setPrice('');
       setExpenseName('');
       setCategory('food');
       setSubmitError('');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('ExpenseInput - Failed to add expense:', error);
       setSubmitError('Failed to add expense. Please try again.');
@@ -58,6 +66,16 @@ export function ExpenseInput(props) {
   return (
     <div className="space-y-6">
       <form onSubmit={submit} className="space-y-6">
+        {/* Success Message */}
+        {successMessage && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-green-700 text-sm font-medium">{successMessage}</p>
+            </div>
+          </div>
+        )}
+        
         {/* Error Display */}
         {submitError && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">

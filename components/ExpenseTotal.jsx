@@ -8,7 +8,7 @@ import { CATEGORY_LABELS } from "../lib/constants/categories";
 export function ExpenseTotal(props) {
   const income = useSelector((store) => store.EXPENSE.income);
   const budget = useSelector((store) => store.EXPENSE.budget);
-  const { expenses: expenseList, fetchExpenses } = useExpenses();
+  const { expenses: expenseList, fetchExpenses, loading } = useExpenses();
   
   // Fetch expenses when component mounts to ensure we have the latest data
   useEffect(() => {
@@ -63,9 +63,17 @@ export function ExpenseTotal(props) {
   
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 border border-blue-200 shadow-xl">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6">
-        Financial Summary
-      </h3>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-2xl font-bold text-gray-800">
+          Financial Summary
+        </h3>
+        {loading && (
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-sm text-blue-600 font-medium">Refreshing...</span>
+          </div>
+        )}
+      </div>
       
       <div className="space-y-4">
         {/* Income */}
