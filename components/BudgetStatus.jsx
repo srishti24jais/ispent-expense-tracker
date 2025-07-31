@@ -1,11 +1,17 @@
 'use client'
 
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useExpenses } from "../lib/hooks/useApi";
 
 export function BudgetStatus() {
   const budget = useSelector((store) => store.EXPENSE.budget);
-  const { expenses: expenseList } = useExpenses();
+  const { expenses: expenseList, fetchExpenses } = useExpenses();
+  
+  // Fetch expenses when component mounts to ensure we have the latest data
+  useEffect(() => {
+    fetchExpenses();
+  }, [fetchExpenses]);
   
   // Helper function to safely parse price
   const safeParsePrice = (price) => {

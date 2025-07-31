@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useExpenses } from "../lib/hooks/useApi";
 import { CATEGORY_LABELS } from "../lib/constants/categories";
@@ -7,7 +8,12 @@ import { CATEGORY_LABELS } from "../lib/constants/categories";
 export function ExpenseTotal(props) {
   const income = useSelector((store) => store.EXPENSE.income);
   const budget = useSelector((store) => store.EXPENSE.budget);
-  const { expenses: expenseList } = useExpenses();
+  const { expenses: expenseList, fetchExpenses } = useExpenses();
+  
+  // Fetch expenses when component mounts to ensure we have the latest data
+  useEffect(() => {
+    fetchExpenses();
+  }, [fetchExpenses]);
   
   // Helper function to safely parse price
   const safeParsePrice = (price) => {

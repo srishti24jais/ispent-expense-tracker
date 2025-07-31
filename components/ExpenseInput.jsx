@@ -53,22 +53,7 @@ export function ExpenseInput(props) {
     }
   }
 
-  // Test function for debugging
-  const testAddExpense = async () => {
-    console.log('ExpenseInput - Testing expense addition');
-    try {
-      const testExpense = {
-        name: 'Test Expense',
-        price: 100,
-        category: 'food',
-        date: new Date().toISOString()
-      };
-      const result = await addExpense(testExpense);
-      console.log('ExpenseInput - Test expense added:', result);
-    } catch (error) {
-      console.error('ExpenseInput - Test failed:', error);
-    }
-  };
+
   
   return (
     <div className="space-y-6">
@@ -151,27 +136,15 @@ export function ExpenseInput(props) {
           </div>
         </div>
         
-        <div className="flex space-x-4">
-          <button 
-            type="submit" 
-            disabled={loading}
-            className={`flex-1 md:flex-none px-8 py-4 bg-gradient-to-r from-blue-400 to-indigo-400 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {loading ? 'Adding...' : 'Add Expense'}
-          </button>
-          
-          {/* Test button for debugging */}
-          <button 
-            type="button"
-            onClick={testAddExpense}
-            disabled={loading}
-            className="px-4 py-4 bg-gradient-to-r from-green-400 to-emerald-400 hover:from-green-500 hover:to-emerald-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-sm"
-          >
-            Test Add
-          </button>
-        </div>
+        <button 
+          type="submit" 
+          disabled={loading}
+          className={`w-full md:w-auto px-8 py-4 bg-gradient-to-r from-blue-400 to-indigo-400 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-lg ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {loading ? 'Adding...' : 'Add Expense'}
+        </button>
       </form>
     </div>
   );
