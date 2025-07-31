@@ -1,17 +1,28 @@
 'use client'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useExpenses } from "../lib/hooks/useApi";
 
 export function BudgetStatus() {
   const budget = useSelector((store) => store.EXPENSE.budget);
   const { expenses: expenseList, fetchExpenses, loading } = useExpenses();
+  const [autoRefreshIndicator, setAutoRefreshIndicator] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
   
   // Fetch expenses when component mounts to ensure we have the latest data
   useEffect(() => {
     fetchExpenses();
   }, [fetchExpenses]);
+
+  // Update timestamp and show indicator when expenses change
+  useEffect(() => {
+    setLastUpdated(new Date());
+    // Show auto-refresh indicator briefly
+    setAutoRefreshIndicator(true);
+    const timer = setTimeout(() => setAutoRefreshIndicator(false), 2000);
+    return () => clearTimeout(timer);
+  }, [expenseList]);
   
   // Helper function to safely parse price
   const safeParsePrice = (price) => {
@@ -48,14 +59,29 @@ export function BudgetStatus() {
   if (safeBudget === 0) {
     return (
       <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 border border-blue-200 shadow-xl">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-gray-800">
-            Budget Status - {monthName}
-          </h3>
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <h3 className="text-2xl font-bold text-gray-800">
+              Budget Status - {monthName}
+            </h3>
+            <div className="flex items-center space-x-2 mt-2">
+              {autoRefreshIndicator && (
+                <div className="flex items-center space-x-1 text-green-600 text-xs font-medium">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span>Budget updated</span>
+                </div>
+              )}
+              {!autoRefreshIndicator && (
+                <span className="text-xs text-gray-500">
+                  Last updated: {lastUpdated.toLocaleTimeString()}
+                </span>
+              )}
+            </div>
+          </div>
           {loading && (
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-sm text-blue-600 font-medium">Refreshing...</span>
+            <div className="flex items-center space-x-1 text-blue-600 text-xs">
+              <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              <span>Refreshing...</span>
             </div>
           )}
         </div>
@@ -93,14 +119,29 @@ export function BudgetStatus() {
   
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 border border-blue-200 shadow-xl">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-bold text-gray-800">
-          Budget Status - {monthName}
-        </h3>
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h3 className="text-2xl font-bold text-gray-800">
+            Budget Status - {monthName}
+          </h3>
+          <div className="flex items-center space-x-2 mt-2">
+            {autoRefreshIndicator && (
+              <div className="flex items-center space-x-1 text-green-600 text-xs font-medium">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Budget updated</span>
+              </div>
+            )}
+            {!autoRefreshIndicator && (
+              <span className="text-xs text-gray-500">
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </span>
+            )}
+          </div>
+        </div>
         {loading && (
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-sm text-blue-600 font-medium">Refreshing...</span>
+          <div className="flex items-center space-x-1 text-blue-600 text-xs">
+            <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span>Refreshing...</span>
           </div>
         )}
       </div>

@@ -1,16 +1,29 @@
 'use client'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ListItem } from "./ListItem";
 import { useExpenses } from "../lib/hooks/useApi";
 
 export function List() {
   const { expenses, fetchExpenses, deleteExpense, loading } = useExpenses();
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [autoRefreshIndicator, setAutoRefreshIndicator] = useState(false);
 
   useEffect(() => {
     console.log('List component - useEffect triggered, fetching expenses');
     fetchExpenses();
   }, [fetchExpenses]); // Include fetchExpenses in dependency array since it's memoized
+
+  // Update timestamp when expenses change
+  useEffect(() => {
+    if (expenses.length > 0) {
+      setLastUpdated(new Date());
+      // Show auto-refresh indicator briefly
+      setAutoRefreshIndicator(true);
+      const timer = setTimeout(() => setAutoRefreshIndicator(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [expenses]);
 
   const handleDelete = async (id) => {
     try {
@@ -57,14 +70,32 @@ export function List() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-700">
-          Total Expenses: {expenses.length}
-        </h3>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-700">
+            Total Expenses: {expenses.length}
+          </h3>
+          <div className="flex items-center space-x-2 mt-1">
+            {autoRefreshIndicator && (
+              <div className="flex items-center space-x-1 text-green-600 text-xs font-medium">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Auto-refreshed</span>
+              </div>
+            )}
+            {!autoRefreshIndicator && (
+              <span className="text-xs text-gray-500">
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </span>
+            )}
+          </div>
+        </div>
         <button
           onClick={handleRefresh}
-          className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm"
+          disabled={loading}
+          className={`px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          Refresh
+          {loading ? 'Refreshing...' : 'Refresh'}
         </button>
       </div>
       <div className="custom-scrollbar max-h-96 overflow-y-auto">
