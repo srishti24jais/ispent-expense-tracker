@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useExpenses } from "../lib/context/ExpensesContext";
 import { CATEGORY_LABELS } from "../lib/constants/categories";
 
-export function ExpenseTotal(props) {
+export function ExpenseTotal() {
   const income = useSelector((store) => store.EXPENSE.income);
   const budget = useSelector((store) => store.EXPENSE.budget);
   const { expenses: expenseList, fetchExpenses, loading } = useExpenses();
@@ -33,7 +33,6 @@ export function ExpenseTotal(props) {
     
     // Check if expenses count has changed
     if (currentLength !== prevExpensesLength.current) {
-      console.log('ExpenseTotal - Expenses changed from', prevExpensesLength.current, 'to', currentLength);
       setLastUpdated(new Date());
       setAutoRefreshIndicator(true);
       

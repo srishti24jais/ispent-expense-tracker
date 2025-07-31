@@ -12,9 +12,8 @@ export function List() {
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    console.log('List component - useEffect triggered, fetching expenses');
     fetchExpenses();
-  }, [fetchExpenses]); // Include fetchExpenses in dependency array since it's memoized
+  }, [fetchExpenses]);
 
   // Update timestamp and show indicator when expenses are actually added/removed
   useEffect(() => {
@@ -30,7 +29,6 @@ export function List() {
     
     // Check if expenses count has changed
     if (currentLength !== prevExpensesLength.current) {
-      console.log('List component - Expenses changed from', prevExpensesLength.current, 'to', currentLength);
       setLastUpdated(new Date());
       setAutoRefreshIndicator(true);
       
@@ -53,11 +51,8 @@ export function List() {
   };
 
   const handleRefresh = () => {
-    console.log('List component - Manual refresh triggered');
     fetchExpenses();
   };
-
-  console.log('List component - Current expenses:', expenses);
 
   if (loading && expenses.length === 0) {
     return (

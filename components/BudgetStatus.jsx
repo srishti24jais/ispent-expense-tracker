@@ -31,7 +31,6 @@ export function BudgetStatus() {
     
     // Check if expenses count has changed
     if (currentLength !== prevExpensesLength.current) {
-      console.log('BudgetStatus - Expenses changed from', prevExpensesLength.current, 'to', currentLength);
       setLastUpdated(new Date());
       setAutoRefreshIndicator(true);
       

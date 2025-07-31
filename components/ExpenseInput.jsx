@@ -4,7 +4,7 @@ import { useState } from "react";
 import { EXPENSE_CATEGORIES } from "../lib/constants/categories";
 import { useExpenses } from "../lib/context/ExpensesContext";
 
-export function ExpenseInput(props) {
+export function ExpenseInput() {
   const { addExpense, loading, error } = useExpenses();
   const [price, setPrice] = useState('');
   const [expenseName, setExpenseName] = useState('');
@@ -14,8 +14,6 @@ export function ExpenseInput(props) {
   async function submit(e) {
     e.preventDefault();
     setSubmitError('');
-    
-    console.log('ExpenseInput - Form submitted with:', { expenseName, price, category });
     
     // Validate inputs
     const parsedPrice = Number.parseFloat(price);
@@ -36,11 +34,8 @@ export function ExpenseInput(props) {
       date: new Date().toISOString()
     };
     
-    console.log('ExpenseInput - Attempting to add expense:', expenseData);
-    
     try {
-      const result = await addExpense(expenseData);
-      console.log('ExpenseInput - Expense added successfully:', result);
+      await addExpense(expenseData);
       
       // Reset form
       setPrice('');
@@ -48,13 +43,10 @@ export function ExpenseInput(props) {
       setCategory('food');
       setSubmitError('');
     } catch (error) {
-      console.error('ExpenseInput - Failed to add expense:', error);
       setSubmitError('Failed to add expense. Please try again.');
     }
   }
 
-
-  
   return (
     <div className="space-y-6">
       <form onSubmit={submit} className="space-y-6">
